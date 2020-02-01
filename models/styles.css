@@ -1,0 +1,16 @@
+.grey{
+    background-color: gray;
+ border: 1px solid ;
+ height: 100px;
+  
+
+}
+.black{
+    background-color: black;
+    border: 1px solid;
+    height:100px;
+   
+}
+.container{
+    border: 1px;
+}
