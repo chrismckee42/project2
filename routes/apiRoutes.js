@@ -20,6 +20,7 @@ module.exports = function(app) {
     db.Example.destroy({ where: { id: req.params.id } }).then(function(
       dbExample
     ) {
+
       res.json(dbExample);
     });
   });
