@@ -1,9 +1,10 @@
-class treasureObj {
-  constructor(name, value) {
-    this.name = name;
-    this.value = value;
-  }
-}
+// class treasureObj {
+//   constructor(name, value, LocationId) {
+//     this.name = name;
+//     this.value = value;
+//     this.LocationId = LocationId;
+//   }
+// }
 
 module.exports = function(sequelize, DataTypes) {
   var Treasure = sequelize.define("Treasure", {
@@ -28,5 +29,10 @@ module.exports = function(sequelize, DataTypes) {
     });
   };
 
+  // function populate() {
+  //   Treasure.create(new treasureObj(i, j, locationList[k]));
+  // }
+
+  // populate();
   return Treasure;
 };

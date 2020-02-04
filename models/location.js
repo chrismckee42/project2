@@ -10,17 +10,17 @@ const locationList = [
   "Dark Cave",
   "Rolling Hills",
   "Mountains"
-]
+];
 
 class locationObj {
   constructor(x, y, name) {
-    this.x = x,
-    this.y = y,
-    this.name = name,
-    this.exitN = y !== yMax,
-    this.exitE = x !== 1,
-    this.exitW = x !== xMax,
-    this.exitS = y !== 1
+    this.x = x;
+    this.y = y;
+    this.name = name;
+    this.exitN = y !== yMax;
+    this.exitE = x !== 1;
+    this.exitW = x !== xMax;
+    this.exitS = y !== 1;
   }
 }
 
@@ -65,22 +65,21 @@ module.exports = function(sequelize, DataTypes) {
   };
 
   function populate() {
-    let k = 0
+    let k = 0;
     for (let i = 1; i <= xMax; i++) {
       for (let j = 1; j <= yMax; j++) {
-        Location.create(new locationObj(i, j, locationList[k]))
-        k++
-      };
-      
+        Location.create(new locationObj(i, j, locationList[k]));
+        k++;
+      }
     }
   }
 
-  // only populate the table once
-  Location.findAll({}).then(function (dbLocations) {
+  // only populate the table
+  Location.findAll({}).then(function(dbLocations) {
     //res.json(dbLocations);
-    console.log(">>>Length: ",dbLocations.length)
+    console.log(">>>Length: ", dbLocations.length);
     if (dbLocations.length === 0) {
-      populate()
+      populate();
     }
   });
 
