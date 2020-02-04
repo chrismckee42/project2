@@ -1,4 +1,11 @@
-module.exports = function (sequelize, DataTypes) {
+class treasureObj {
+  constructor(name, value) {
+    this.name = name;
+    this.value = value;
+  }
+}
+
+module.exports = function(sequelize, DataTypes) {
   var Treasure = sequelize.define("Treasure", {
     name: {
       type: DataTypes.STRING,
@@ -13,7 +20,7 @@ module.exports = function (sequelize, DataTypes) {
     }
   });
 
-  Treasure.associate = function (models) {
+  Treasure.associate = function(models) {
     Treasure.belongsTo(models.Location, {
       foreignKey: {
         allowNull: false

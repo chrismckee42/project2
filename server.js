@@ -26,7 +26,7 @@ require("./routes/apiRoutes")(app);
 require("./routes/location-api-routes")(app);
 require("./routes/monster-api-routes")(app);
 require("./routes/treasure-api-routes")(app);
-require("./routes/characterlocation-api-routes")(app);
+require("./routes/player-api-routes")(app);
 require("./routes/htmlRoutes")(app);
 
 var syncOptions = { force: false };

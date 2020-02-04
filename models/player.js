@@ -1,4 +1,4 @@
-module.exports = function (sequelize, DataTypes) {
+module.exports = function(sequelize, DataTypes) {
   var Player = sequelize.define("Player", {
     name: {
       type: DataTypes.STRING,
@@ -39,7 +39,7 @@ module.exports = function (sequelize, DataTypes) {
     }
   });
 
-  Player.associate = function (models) {
+  Player.associate = function(models) {
     Player.belongsTo(models.Location, {
       foreignKey: {
         allowNull: false
