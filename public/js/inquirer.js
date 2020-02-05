@@ -2,6 +2,8 @@
 
 const inquirer = require('inquirer');
 
+
+//list choices for inquirer prompts. key is message.
 const listChoices = { //key is the message. value is the choices
     'start game': ['start'],
     'choose role': ['Coward (+% flee chance)', 'Barbara the Wall (+pts hp)', 'Jabby McJabberson (+pts attack)'],
@@ -16,11 +18,11 @@ const listChoices = { //key is the message. value is the choices
 }
 
 const promptList = {
-    'list': (message, directionObj) => ({ // directionObj = {north: true, south: true, east: false, west: true}...
+    'list': (key, choices, name, message) => ({ // directionObj = {north: true, south: true, east: false, west: true}...
         type: "list",
-        choices: directionObj && !Array.isArray(listChoices[message]) ? listChoices[message](directionObj) : directionObj === undefined ? listChoices[message] : ['error'],
-        message: message,
-        name: "res",
+        choices: choices && !Array.isArray(listChoices[key]) ? listChoices[key](choices) :  listChoices[key] ,
+        message: message ? message : key,
+        name: name ? name : "res",
     }),
     'input': message => ({
         message,
@@ -29,7 +31,7 @@ const promptList = {
         type: 'input'
     }),
     'order qty': (qty, name) => ({
-        name: "purchase",
+        name: "res",
         type: "input",
         message: `How many ${name} would you like to buy?`,
         validate: input => !isNaN(input) && qty >= input ? true : `The number you entered is invalid. Please pick a number less than or equal to ${qty}.`
@@ -38,6 +40,21 @@ const promptList = {
 
 
 const testData = {
+    char: {
+        hasChosenCharacter: false,
+        roles: ['barb', 'druid', 'rogue'],
+        inventory: {
+            treasure: {
+                'Bag of Copper Coins' : {
+                    amount: 0
+                },
+                'silver  chalice' : {
+                    amount: 40
+                }
+            },
+            gold: 0
+        }
+    },
     coords: {
         x: 0,
         y: 3
@@ -57,9 +74,9 @@ const testData = {
 
 const init = async () => {
 
-    const prompt = (message, choices) => choices ? inquirer.prompt(promptList.list(message, choices)) : inquirer.prompt(promptList.list(message));
+    const prompt = (a, b, c, d) => inquirer.prompt(promptList.list(a, b, c, d));
 
-    const {res: startGame} = await prompt('start game');
+    const {startGame} = await prompt('start game', null, 'startGame');
     console.log('player has chosen', startGame);
 
     const dealWithMonster = async () => {
@@ -67,7 +84,8 @@ const init = async () => {
         if (!monster) console.log('there are no monsters present');
         else {
             console.log('A monster is present, he charges you, what do you do?');
-            const {res: battleOption} = await prompt('battle options');
+            const {battleOption} = await prompt('battle options',null,'battleOption');
+            console.log('battle option chosen:', battleOption)
             const choose = {
                 'strike': () => {
                     console.log('nothing happens yet. pick again.')
@@ -87,7 +105,7 @@ const init = async () => {
     dealWithMonster()
 
     const getNewCoords = async (coords = testData.coords) => {
-        const {res: direction} = await prompt('move directions', testData['directions']);
+        const {direction} = await prompt('move directions', testData['directions'], direction);
         console.log('player has chosen to travel', direction);
         console.log('old coords', coords);
         let {x,y} = coords;
