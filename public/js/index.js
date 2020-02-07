@@ -6,7 +6,7 @@ var $gameList = $("#game-list");
 
 // The API object contains methods for each kind of request we'll make
 var API = {
-  saveGame: function(game) {
+  createGame: function(game) {
     return $.ajax({
       headers: {
         "Content-Type": "application/json"
@@ -19,13 +19,13 @@ var API = {
   getGames: function() {
     return $.ajax({
       url: "api/games",
-      type: "GET"
+      type: "GET" // Check
     });
   },
   deleteGame: function(id) {
     return $.ajax({
       url: "api/games/" + id,
-      type: "DELETE"
+      type: "DELETE" // Check
     });
   }
 };

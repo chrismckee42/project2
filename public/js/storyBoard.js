@@ -14,6 +14,7 @@ const init = async () => {
 
   class Game {
     constructor(
+      name,
       role,
       location,
       hp,
@@ -37,6 +38,7 @@ const init = async () => {
       treasure4Sold,
       treasure5Sold
     ) {
+      this.name;
       this.playerCoords = location;
       this.tiles = [
         ["Swamp", "Field", "Abandoned Fort"],
@@ -90,11 +92,38 @@ const init = async () => {
       return { gold, healthPotions, treasureInPosession };
     }
     get stats() {
-      let { hp, atk, dodge, fullHealth } = this._stats;
-      return { hp, atk, dodge, fullHealth };
+      let { hp, atk, dodge, hpMax } = this._stats;
+      return { hp, atk, dodge, hpMax };
     }
     sleep() {
-      this._stats.hp = this._stats.fullHealth;
+      this.hp = this.hpMax;
+    }
+    saveGame() {
+      return {
+        name: this.name,
+        role: this.roleSelected,
+        location: this.playerCoords,
+        hp: this.hp,
+        hpMax: this.hpMax,
+        attack: this.attack,
+        dodge: this.dodge,
+        gold: this.gold,
+        potions: this.potions,
+        monster1HP: this.monsters[0][1],
+        monster2HP: this.monsters[1][1],
+        monster3HP: this.monsters[2][1],
+        monster4HP: this.monsters[3][1],
+        treasure1Found: this.treasure[0][3],
+        treasure2Found: this.treasure[1][3],
+        treasure3Found: this.treasure[2][3],
+        treasure4Found: this.treasure[3][3],
+        treasure5Found: this.treasure[4][3],
+        treasure1Sold: this.treasure[0][4],
+        treasure2Sold: this.treasure[1][4],
+        treasure3Sold: this.treasure[2][4],
+        treasure4Sold: this.treasure[3][4],
+        treasure5Sold: this.treasure[4][4]
+      };
     }
     get locationData() {
       let id = this.playerCoords;
@@ -149,9 +178,62 @@ const init = async () => {
     }
   }
 
-  function newGame(name, role) {}
+  function newGame(name, role) {
+    //let i = roles.indexOf(role)
+    var myGame = new Game(
+      name, //name
+      role, //role
+      5, //location
+      stats[role][0], //hp
+      stats[role][0], //hpMax
+      stats[role][1], //attack
+      stats[role][2], //dodge
+      0, //gold
+      0, //potions
+      30, //monster1HP
+      50, //monster2HP
+      60, //monster3HP
+      100, //monster4HP
+      false, //treasure1Found
+      false, //treasure2Found
+      false, //treasure3Found
+      false, //treasure4Found
+      false, //treasure5Found
+      false, //treasure1Sold
+      false, //treasure2Sold
+      false, //treasure3Sold
+      false, //treasure4Sold
+      false //treasure5Sold
+    )
+  }
 
-  function loadGame(gameObj) {}
+  function loadGame(gameObj) {
+    var myGame = new Game(
+      gameObj.name,
+      gameObj.role,
+      gameObj.location,
+      gameObj.hp,
+      gameObj.hpMax,
+      gameObj.attack,
+      gameObj.dodge,
+      gameObj.gold,
+      gameObj.potions,
+      gameObj.monster1HP,
+      gameObj.monster2HP,
+      gameObj.monster3HP,
+      gameObj.monster4HP,
+      gameObj.treasure1Found,
+      gameObj.treasure2Found,
+      gameObj.treasure3Found,
+      gameObj.treasure4Found,
+      gameObj.treasure5Found,
+      gameObj.treasure1Sold,
+      gameObj.treasure2Sold,
+      gameObj.treasure3Sold,
+      gameObj.treasure4Sold,
+      gameObj.treasure5Sold
+    )
+  }
 
   //test:
   // const newGame = new Game("rouge");
