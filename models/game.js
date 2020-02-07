@@ -7,7 +7,7 @@ module.exports = function (sequelize, DataTypes) {
         len: [1]
       }
     },
-    charClass: {
+    role: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -36,6 +36,10 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false
     },
     gold: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    },
+    potions: {
       type: DataTypes.INTEGER,
       defaultValue: 0
     },
@@ -72,6 +76,26 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false
     },
     treasure5Found: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    treasure1Sold: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    treasure2Sold: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    treasure3Sold: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    treasure4Sold: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    treasure5Sold: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     }

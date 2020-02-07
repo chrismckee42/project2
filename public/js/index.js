@@ -6,7 +6,7 @@ var $gameList = $("#game-list");
 
 // The API object contains methods for each kind of request we'll make
 var API = {
-  saveGame: function(game) {
+  createGame: function(game) {
     return $.ajax({
       headers: {
         "Content-Type": "application/json"
@@ -19,13 +19,26 @@ var API = {
   getGames: function() {
     return $.ajax({
       url: "api/games",
-      type: "GET"
+      type: "GET" // Check
+    });
+  },
+  loadGame: function() {
+    return $.ajax({
+      url: "api/games" + id,
+      type: "GET" // Check
+    });
+  },
+  saveGame: function(game) {
+    return $.ajax({
+      url: "api/games",
+      type: "PUT", // Check
+      data: JSON.stringify(game)
     });
   },
   deleteGame: function(id) {
     return $.ajax({
       url: "api/games/" + id,
-      type: "DELETE"
+      type: "DELETE" // Check
     });
   }
 };
@@ -74,7 +87,7 @@ var handleFormSubmit = function(event) {
     return;
   }
 
-  API.saveGame(game).then(function() {
+  API.createGame(game).then(function() {
     refreshGames();
   });
 
@@ -82,18 +95,5 @@ var handleFormSubmit = function(event) {
   $gameDescription.val("");
 };
 
-// handleDeleteBtnClick is called when an game's delete button is clicked
-// Remove the game from the db and refresh the list
-var handleDeleteBtnClick = function() {
-  var idToDelete = $(this)
-    .parent()
-    .attr("data-id");
-
-  API.deleteGame(idToDelete).then(function() {
-    refreshGames();
-  });
-};
-
 // Add event listeners to the submit and delete buttons
 $submitBtn.on("click", handleFormSubmit);
-$gameList.on("click", ".delete", handleDeleteBtnClick);
