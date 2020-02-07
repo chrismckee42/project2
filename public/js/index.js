@@ -1,47 +1,47 @@
 // Get references to page elements
-var $exampleText = $("#example-text");
-var $exampleDescription = $("#example-description");
+var $gameText = $("#game-text");
+var $gameDescription = $("#game-description");
 var $submitBtn = $("#submit");
-var $exampleList = $("#example-list");
+var $gameList = $("#game-list");
 
 // The API object contains methods for each kind of request we'll make
 var API = {
-  saveExample: function(example) {
+  saveGame: function(game) {
     return $.ajax({
       headers: {
         "Content-Type": "application/json"
       },
       type: "POST",
-      url: "api/examples",
-      data: JSON.stringify(example)
+      url: "api/games",
+      data: JSON.stringify(game)
     });
   },
-  getExamples: function() {
+  getGames: function() {
     return $.ajax({
-      url: "api/examples",
+      url: "api/games",
       type: "GET"
     });
   },
-  deleteExample: function(id) {
+  deleteGame: function(id) {
     return $.ajax({
-      url: "api/examples/" + id,
+      url: "api/games/" + id,
       type: "DELETE"
     });
   }
 };
 
-// refreshExamples gets new examples from the db and repopulates the list
-var refreshExamples = function() {
-  API.getExamples().then(function(data) {
-    var $examples = data.map(function(example) {
+// refreshGames gets new games from the db and repopulates the list
+var refreshGames = function() {
+  API.getGames().then(function(data) {
+    var $games = data.map(function(game) {
       var $a = $("<a>")
-        .text(example.text)
-        .attr("href", "/example/" + example.id);
+        .text(game.text)
+        .attr("href", "/game/" + game.id);
 
       var $li = $("<li>")
         .attr({
           class: "list-group-item",
-          "data-id": example.id
+          "data-id": game.id
         })
         .append($a);
 
@@ -54,46 +54,46 @@ var refreshExamples = function() {
       return $li;
     });
 
-    $exampleList.empty();
-    $exampleList.append($examples);
+    $gameList.empty();
+    $gameList.append($games);
   });
 };
 
-// handleFormSubmit is called whenever we submit a new example
-// Save the new example to the db and refresh the list
+// handleFormSubmit is called whenever we submit a new game
+// Save the new game to the db and refresh the list
 var handleFormSubmit = function(event) {
   event.preventDefault();
 
-  var example = {
-    text: $exampleText.val().trim(),
-    description: $exampleDescription.val().trim()
+  var game = {
+    text: $gameText.val().trim(),
+    description: $gameDescription.val().trim()
   };
 
-  if (!(example.text && example.description)) {
-    alert("You must enter an example text and description!");
+  if (!(game.text && game.description)) {
+    alert("You must enter an game text and description!");
     return;
   }
 
-  API.saveExample(example).then(function() {
-    refreshExamples();
+  API.saveGame(game).then(function() {
+    refreshGames();
   });
 
-  $exampleText.val("");
-  $exampleDescription.val("");
+  $gameText.val("");
+  $gameDescription.val("");
 };
 
-// handleDeleteBtnClick is called when an example's delete button is clicked
-// Remove the example from the db and refresh the list
+// handleDeleteBtnClick is called when an game's delete button is clicked
+// Remove the game from the db and refresh the list
 var handleDeleteBtnClick = function() {
   var idToDelete = $(this)
     .parent()
     .attr("data-id");
 
-  API.deleteExample(idToDelete).then(function() {
-    refreshExamples();
+  API.deleteGame(idToDelete).then(function() {
+    refreshGames();
   });
 };
 
 // Add event listeners to the submit and delete buttons
 $submitBtn.on("click", handleFormSubmit);
-$exampleList.on("click", ".delete", handleDeleteBtnClick);
+$gameList.on("click", ".delete", handleDeleteBtnClick);

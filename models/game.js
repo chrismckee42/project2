@@ -14,7 +14,16 @@ module.exports = function (sequelize, DataTypes) {
         len: [1]
       }
     },
+    location: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 5
+    },
     hp: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    hpMax: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
@@ -23,7 +32,7 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false
     },
     dodge: {
-      type: DataTypes.DECIMAL(3, 2),
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     gold: {
@@ -32,35 +41,39 @@ module.exports = function (sequelize, DataTypes) {
     },
     monster1HP: {
       type: DataTypes.INTEGER,
-      defaultValue: 10
-    },
-    monster1Alive: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: True
+      defaultValue: 30
     },
     monster2HP: {
       type: DataTypes.INTEGER,
-      defaultValue: 10
-    },
-    monster2Alive: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: True
+      defaultValue: 50
     },
     monster3HP: {
       type: DataTypes.INTEGER,
-      defaultValue: 10
-    },
-    monster3Alive: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: True
+      defaultValue: 60
     },
     monster4HP: {
       type: DataTypes.INTEGER,
-      defaultValue: 10
+      defaultValue: 100
     },
-    monster4Alive: {
+    treasure1Found: {
       type: DataTypes.BOOLEAN,
-      defaultValue: True
+      defaultValue: false
+    },
+    treasure2Found: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    treasure3Found: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    treasure4Found: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    treasure5Found: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   });
 
