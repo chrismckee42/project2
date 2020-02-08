@@ -1,0 +1,22 @@
+body {
+    font-family: 'Press Start 2P', cursive !important;
+    background-color: rgb(27, 27, 27) !important;
+    color: rgb(109, 150, 75) !important;
+    /*    background-repeat: repeat;*/
+}
+
+.container {
+    width: 70%;
+    height: 100% absolute;
+}
+
+header {
+   background-image: url('./Background.jpg');
+    background-size: relative 100%;
+}
+
+#monster {
+    height: 25%;
+    width: relative;
+}
+
