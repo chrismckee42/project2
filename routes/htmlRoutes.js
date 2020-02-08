@@ -1,23 +1,29 @@
 var db = require("../models");
 
+const roles = ["barb", "druid", "rogue"];
+const stats = {
+  //0 : hp, 1: atk, 2: dodge chance (x = x/10 times a strike will mss)
+  barb: [100, 15, 1],
+  druid: [80, 12, 4],
+  rogue: [50, 8, 6]
+};
+
 module.exports = function(app) {
   // Load index page
   app.get("/", function(req, res) {
-    db.Example.findAll({}).then(function(dbExamples) {
+    db.Game.findAll({}).then(function(dbGames) {
       res.render("index", {
         msg: "Welcome!",
-        examples: dbExamples
+        games: dbGames
       });
     });
   });
 
-  // Load example page and pass in an example by id
-  app.get("/example/:id", function(req, res) {
-    db.Example.findOne({ where: { id: req.params.id } }).then(function(
-      dbExample
-    ) {
-      res.render("example", {
-        example: dbExample
+  // Load game page and pass in an game by id
+  app.get("/game/:id", function(req, res) {
+    db.Game.findOne({ where: { id: req.params.id } }).then(function(dbGame) {
+      res.render("game", {
+        game: dbGame
       });
     });
   });
