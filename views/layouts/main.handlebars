@@ -1,15 +1,31 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/styles/styles.css" media="screen" title="no title" charset="utf-8">
-  <title>Home Page</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="./styles/styles.css">
 </head>
-
 <body>
-  {{{body}}}
-</body>
+	<div class="container">
+	<header id="masthead">
+		<img id="monster" src="owlbear.png" class="rounded mx-auto d-block" alt="owlbear.png">
+	</header styles="background-image: url('./Background.jpg');">
+	<div id="main-container" class="container">
+		<section class="main-section">
+			
+			<p class="rules">{{message}}</p>
+			<div>
+        {{type}}
+				<button type="button" class="btn btn-success btn-lg btn-block">North</button>
+				<button type="button" class="btn btn-success btn-lg btn-block">South</button>
+				<button type="button" class="btn btn-success btn-lg btn-block">East</button>
+				<button type="button" class="btn btn-success btn-lg btn-block">West</button>
+			</div>
+		</section>
+	</div>
+</div>
+	
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.js"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
+</body>
 </html>

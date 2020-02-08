@@ -11,12 +11,15 @@ body {
 }
 
 header {
-   background-image: url('./Background.jpg');
-    background-size: relative 100%;
+    background-image: url('./Background.jpg');
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    max-height: 450px;
 }
 
 #monster {
-    height: 25%;
+    max-height: 450px;
     width: relative;
 }
-
