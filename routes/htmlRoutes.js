@@ -1,40 +1,35 @@
 var db = require("../models");
-var path = require("path");
 
-module.exports = function (app) {
-  app.get("/", function(req, res){
-    res.sendFile(path.join(__dirname, "../models/home.html"));
-  })
+const roles = ["barb", "druid", "rogue"];
+const stats = {
+  //0 : hp, 1: atk, 2: dodge chance (x = x/10 times a strike will mss)
+  barb: [100, 15, 1],
+  druid: [80, 12, 4],
+  rogue: [50, 8, 6]
+};
 
-  app.get("/index", function (req, res) {
-    res.sendFile(path.join(__dirname, "../models/index.html"));
-  });
-  app.get("/landing", function (req, res) {
-    res.sendFile(path.join(__dirname, "../models/landingPage.html"));
-  });
+module.exports = function(app) {
   // Load index page
-  app.get("/", function (req, res) {
-    db.Example.findAll({}).then(function (dbExamples) {
+  app.get("/", function(req, res) {
+    db.Game.findAll({}).then(function(dbGames) {
       res.render("index", {
         msg: "Welcome!",
-        examples: dbExamples
+        games: dbGames
       });
     });
   });
 
-  // Load example page and pass in an example by id
-  app.get("/example/:id", function (req, res) {
-    db.Example.findOne({ where: { id: req.params.id } }).then(function (
-      dbExample
-    ) {
-      res.render("example", {
-        example: dbExample
+  // Load game page and pass in an game by id
+  app.get("/game/:id", function(req, res) {
+    db.Game.findOne({ where: { id: req.params.id } }).then(function(dbGame) {
+      res.render("game", {
+        game: dbGame
       });
     });
   });
 
   // Render 404 page for any unmatched routes
-  app.get("*", function (req, res) {
+  app.get("*", function(req, res) {
     res.render("404");
   });
 };

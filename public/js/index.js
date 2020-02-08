@@ -1,99 +1,104 @@
 // Get references to page elements
-var $exampleText = $("#example-text");
-var $exampleDescription = $("#example-description");
-var $submitBtn = $("#submit");
-var $exampleList = $("#example-list");
+// var $gameText = $("#game-text");
+// var $gameDescription = $("#game-description");
+// var $submitBtn = $("#submit");
+// var $gameList = $("#game-list");
 
 // The API object contains methods for each kind of request we'll make
 var API = {
-  saveExample: function(example) {
+  createGame: function(game) {
     return $.ajax({
       headers: {
         "Content-Type": "application/json"
       },
       type: "POST",
-      url: "api/examples",
-      data: JSON.stringify(example)
+      url: "api/games",
+      data: JSON.stringify(game)
     });
   },
-  getExamples: function() {
+  getGames: function() {
     return $.ajax({
-      url: "api/examples",
-      type: "GET"
+      url: "api/games",
+      type: "GET" // Check
     });
   },
-  deleteExample: function(id) {
+  loadGame: function() {
     return $.ajax({
-      url: "api/examples/" + id,
-      type: "DELETE"
+      url: "api/games" + id,
+      type: "GET" // Check
     });
+  },
+  saveGame: function(game) {
+    return $.ajax({
+      url: "api/games",
+      type: "PUT", // Check
+      data: JSON.stringify(game)
+    });
+  },
+  deleteGame: function(id) {
+    return $.ajax({
+      url: "api/games/" + id,
+      type: "DELETE" // Check
+    });
+  },
+  test: function() {
+    console.log("test complete!")
   }
 };
 
-// refreshExamples gets new examples from the db and repopulates the list
-var refreshExamples = function() {
-  API.getExamples().then(function(data) {
-    var $examples = data.map(function(example) {
-      var $a = $("<a>")
-        .text(example.text)
-        .attr("href", "/example/" + example.id);
+// refreshGames gets new games from the db and repopulates the list
+// var refreshGames = function() {
+//   API.getGames().then(function(data) {
+//     var $games = data.map(function(game) {
+//       var $a = $("<a>")
+//         .text(game.text)
+//         .attr("href", "/game/" + game.id);
 
-      var $li = $("<li>")
-        .attr({
-          class: "list-group-item",
-          "data-id": example.id
-        })
-        .append($a);
+//       var $li = $("<li>")
+//         .attr({
+//           class: "list-group-item",
+//           "data-id": game.id
+//         })
+//         .append($a);
 
-      var $button = $("<button>")
-        .addClass("btn btn-danger float-right delete")
-        .text("ｘ");
+//       var $button = $("<button>")
+//         .addClass("btn btn-danger float-right delete")
+//         .text("ｘ");
 
-      $li.append($button);
+//       $li.append($button);
 
-      return $li;
-    });
+//       return $li;
+//     });
 
-    $exampleList.empty();
-    $exampleList.append($examples);
-  });
-};
+//     $gameList.empty();
+//     $gameList.append($games);
+//   });
+// };
 
-// handleFormSubmit is called whenever we submit a new example
-// Save the new example to the db and refresh the list
-var handleFormSubmit = function(event) {
-  event.preventDefault();
+// handleFormSubmit is called whenever we submit a new game
+// Save the new game to the db and refresh the list
+// var handleFormSubmit = function(event) {
+//   event.preventDefault();
 
-  var example = {
-    text: $exampleText.val().trim(),
-    description: $exampleDescription.val().trim()
-  };
+//   var game = {
+//     text: $gameText.val().trim(),
+//     description: $gameDescription.val().trim()
+//   };
 
-  if (!(example.text && example.description)) {
-    alert("You must enter an example text and description!");
-    return;
-  }
+//   if (!(game.text && game.description)) {
+//     alert("You must enter an game text and description!");
+//     return;
+//   }
 
-  API.saveExample(example).then(function() {
-    refreshExamples();
-  });
+//   API.createGame(game).then(function() {
+//     refreshGames();
+//   });
 
-  $exampleText.val("");
-  $exampleDescription.val("");
-};
-
-// handleDeleteBtnClick is called when an example's delete button is clicked
-// Remove the example from the db and refresh the list
-var handleDeleteBtnClick = function() {
-  var idToDelete = $(this)
-    .parent()
-    .attr("data-id");
-
-  API.deleteExample(idToDelete).then(function() {
-    refreshExamples();
-  });
-};
+//   $gameText.val("");
+//   $gameDescription.val("");
+// };
 
 // Add event listeners to the submit and delete buttons
-$submitBtn.on("click", handleFormSubmit);
-$exampleList.on("click", ".delete", handleDeleteBtnClick);
+// $submitBtn.on("click", handleFormSubmit);
+
+// module.exports = API;
