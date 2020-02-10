@@ -2,13 +2,14 @@ const roles = require("./roles");
 
 class Game {
   constructor({ selectedRole, playerCoords, inventory, name }) {
-    this.playerCoords = playerCoords ? playerCoords : 5;
+    this.roleSelected = selectedRole;
+    playerCoords = playerCoords > 0 && playerCoords < 10 ? playerCoords : 5
+    this.playerCoords = 5;
     this.tiles = [
       ["Swamp", "Field", "Abandoned Fort"],
       ["Forest", "Town", "Farm"],
       ["Dark Cave", "Rolling Hills", "Mountains"]
     ];
-    this.roleSelected = selectedRole;
     this.name = name ? name : false;
     let { hp, atk, dodge } = roles[selectedRole];
     this._stats = { hp, atk, dodge, maxHP: hp }; //0 : hp, 1: atk, 2: dodge chance (x = x/10 times a strike will mss)
@@ -49,6 +50,7 @@ class Game {
       [2, 1],
       [2, 2]
     ];
+    console.log("PLAYER COORDS" , this.playerCoords)
   }
   get inventory() {
     let { gold, healthPotions, treasureInPosession } = this._inventory;
@@ -65,7 +67,10 @@ class Game {
   }
   get locationData() {
     let id = this.playerCoords;
+    console.log('ID', id)
     let [y, x] = this.location[id];
+    
+    console.log('b')
     let locationData = {
       coords: [x, y],
       currentLocation: this.tiles[y][x],
@@ -85,7 +90,7 @@ class Game {
           ? this._inventory.treasure.filter(treasure => treasure[2] === id)[0]
           : false
     };
-    // console.log({locationData})
+    console.log({ locationData });
     return locationData;
   }
   upgrade({ hp, maxHP, atk, dodge, gold }) {

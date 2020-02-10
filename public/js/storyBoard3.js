@@ -6,11 +6,10 @@ const roles = require("./roles");
 // const { prompt } = inquirer;
 // const {prompt} = require("../../routes/htmlRoutes.js")
 // const prompt = htmlRoutes.prompt;
-let type = 'list';
-let playerName = '';
-let selectedRole = '';
+let type = "list";
+let playerName = "";
+let selectedRole = "";
 let game;
-
 
 module.exports = function({ name, response }) {
   console.log({ name, response });
@@ -20,68 +19,179 @@ module.exports = function({ name, response }) {
   //promptList
   const promptList = {
     init: res => {
-      return res === "startNewOrContinue"? {
-        type: "list",
-        message: "Welcome to Adventure Game. Please select start",
-        choices: ["Start Game", "Continue Game"],
-        name: "pick role",
-        monster: null,
-        background: "./img/tiles/town.jpg",
-        name: "startNewOrContinue"
-      } : { message: error };
+      return res === "startNewOrContinue"
+        ? {
+            type: "list",
+            message: "Welcome to Adventure Game. Please select start",
+            choices: ["Start Game", "Continue Game"],
+            name: "pick role",
+            monster: null,
+            background: "./img/tiles/town.jpg",
+            name: "startNewOrContinue"
+          }
+        : { message: error };
     },
-    startNewOrContinue: res => res === "Start Game" ? 
-       {
-        type: "input",
-        message: "Please enter your character's name:",
-        name: "pick name",
-        validate: name => name.length >= 3 && name.length < 45
-      } : res === "Continue Game" ? {
-        choices: ["placeholder"],
-        message: "Please choose your character's name",
-        name: "game"
-      } : { message: error },
-    "pick name" : res => {
+    startNewOrContinue: res =>
+      res === "Start Game"
+        ? {
+            type: "input",
+            message: "Please enter your character's name:",
+            name: "pick name",
+            validate: name => name.length >= 3 && name.length < 45
+          }
+        : res === "Continue Game"
+        ? {
+            choices: ["placeholder"],
+            message: "Please choose your character's name",
+            name: "game"
+          }
+        : { message: error },
+    "pick name": res => {
       playerName = res;
-      return ({
+      return {
         message: "Please select your character role:",
         choices: Object.keys(roles),
         name: "pick role"
-      })
+      };
     },
-    "pick role" : res => {
+    "pick role": res => {
       selectedRole = res;
       savedGames[playerName] = new Game({ selectedRole });
       game = savedGames[playerName];
-      return ({
-        message: `"Welcome" to town! Here you will be able to sell treasure, buy health potions, heal at the inn, or upgrade weapons and armor at the blacksmith.`,
-        choices: ["Check Inventory", "Check my own stats", "Travel", "Go to Inn", "Go to Apothecary", "Go to Blacksmith", "Go to Appraiser"],
-        name: 'decision',
-      })
+      return {
+        message:
+          "\"Welcome\" to town! Here you will be able to sell treasure, buy health potions, heal at the inn, or upgrade weapons and armor at the blacksmith.",
+        choices: [
+          "Check Inventory",
+          "Check my own stats",
+          "Travel",
+          "Go to Inn",
+          "Go to Apothecary",
+          "Go to Blacksmith",
+          "Go to Appraiser"
+        ],
+        name: "decision"
+      };
     },
-    "decision" : res => 
-      res === "Check Inventory" ? (function(){
-        const { gold, healthPotions, treasureInPosession } = game.inventory;
-        return ({
-          message: `Gold: $${gold} \n Health Potions: ${healthPotions} \n Treasure: ${treasureInPosession}`,
-          choices: ["Check Inventory", "Check my own stats", "Travel", "Go to Inn", "Go to Apothecary", "Go to Blacksmith", "Go to Appraiser"],
-          name: 'decision',
-        })
-      })() : 
-      res === "Check my own stats" ? (function(){
-        const { hp, atk, dodge, maxHP } = game.stats;
-        return ({
-          message: `Your health is ${hp}/${maxHP}. Your attack damage is ${atk}. Your dodge chance is ${(dodge * 10).toFixed()}%.`,
-          choices: ["Check Inventory", "Check my own stats", "Travel", "Go to Inn", "Go to Apothecary", "Go to Blacksmith", "Go to Appraiser"],
-          name: 'decision'
-        })
-      })(): {message : error},
+    decision: res =>
+      res === "Check Inventory"
+        ? (function() {
+            const { gold, healthPotions, treasureInPosession } = game.inventory;
+            return {
+              message: `Gold: $${gold} \n Health Potions: ${healthPotions} \n Treasure: ${treasureInPosession}`,
+              choices: [
+                "Check Inventory",
+                "Check my own stats",
+                "Travel",
+                "Go to Inn",
+                "Go to Apothecary",
+                "Go to Blacksmith",
+                "Go to Appraiser"
+              ],
+              name: "decision"
+            };
+          })()
+        : res === "Check my own stats"
+        ? (function() {
+            const { hp, atk, dodge, maxHP } = game.stats;
+            return {
+              message: `Your health is ${hp}/${maxHP}. Your attack damage is ${atk}. Your dodge chance is ${(
+                dodge * 10
+              ).toFixed()}%.`,
+              choices: [
+                "Check Inventory",
+                "Check my own stats",
+                "Travel",
+                "Go to Inn",
+                "Go to Apothecary",
+                "Go to Blacksmith",
+                "Go to Appraiser"
+              ],
+              name: "decision"
+            };
+          })()
+          : res === "Travel"
+            ? (function() {
+              const { directions: nsew } = game.locationData;
+              const choices = Object.keys(nsew).map(direction =>
+                nsew[direction]
+                  ? `${direction}:  ${nsew[direction]}`
+                  : `${direction}:  disabled`
+              );
+              choices.push("Cancel");
+              return {
+                type,
+                choices,
+                message: "Which direction do you want to travel?",
+                name: "direction"
+              };
+            })()
+            : { message: error },
+    'direction': res => {
 
-    
-  }
+      const dir = res.split('. ')
+      if (res === "Cancel") {
+        return promptList['decision']("Travel")
+      } else {
+        const [newNSEW] = response.split(': ');
+        console.log(newNSEW)
+        game.updateCoords(newNSEW);
+        const { currentLocation, monster, treasure } = game.locationData;
+        let messageA =  `You travel ${newNSEW} to the ${currentLocation}. `;
+        let planB = Array(4).fill(null);
+        let [monsterName, hp, atk, monsterIsAlive] = monster || planB;
+        let [treasureName, , , treasureIsAvailable] = treasure || planB;
+        let promptList = {
+          town: {
+            // eslint-disable-next-line prettier/prettier
+            message:  `${messageA} Welcome back to town! Here you will be able to sell treasure, buy health potions, heal at the inn, or upgrade weapons and armor at the blacksmith.`,
+            // eslint-disable-next-line prettier/prettier
+            choices: ["Check Inventory", "Check my own stats", "Travel", "Go to Inn", "Go to Apothecary", "Go to Blacksmith", "Go to Appraiser"],
+          },
+          monsterIsAlive: {
+            message: `${messageA}You made it to ${currentLocation}. Oh no, it's a ${monsterName} with ${atk} attack, and ${hp} hp. ${
+              // eslint-disable-next-line prettier/prettier
+              treasureIsAvailable ? `It seems to be guarding a ${treasureName}. ` : ""
+            } What do you want to do?`,
+            // eslint-disable-next-line prettier/prettier
+            choices: ["Check my own stats", "Attack monster", "Run Away", "Check inventory for health potions"]
+          },
+          treasureIsAvailable: {
+            // eslint-disable-next-line prettier/prettier
+            message: `${messageA}${monsterName && !monsterIsAlive ? `There appears to be a dead ${monsterName}. You must've killed it. ` : ""}Well there appears to be some treasure. A ${treasureName} by the looks of it. What do you want to do?`,
+            choices: ["Run Away", "Take treasure"]
+          },
+          treasureTook: {
+            // eslint-disable-next-line prettier/prettier
+            message: `${messageA}You took the ${treasureName}. ${monsterName && !monsterIsAlive ? `I guess the ${monsterName} won't be needing it. ` : ""}Where to now?`,
+            // eslint-disable-next-line prettier/prettier
+            choices: ["Travel", "Check Inventory", "Check my own stats", "Check inventory for health potions"]
+          },
+          nothingSpecial: {
+            message: `${messageA}Doesn't seem like anything's here...`,
+            choices: [
+              "Travel",
+              "Check Inventory",
+              "Check my own stats",
+              "Check inventory for health potions"
+            ]
+          },
+          navigate: {
+            message: "",
+            choices: []
+          }
+        };
+        // eslint-disable-next-line prettier/prettier
+        const selection = currentLocation === "Town" ? "town" : monsterIsAlive ?"monsterIsAlive" : treasureIsAvailable? "treasureIsAvailable" :"nothingSpecial";
+        const { message , choices } = promptList[selection];
+        return {message, choices, name: "decision"};
+      }
+      console.log("res?", res)
+    }
+  };
   let obj = promptList[name](response);
   obj.background = obj.background ? obj.background : "./img/tiles/town.jpg";
-  obj.type = obj.type ? obj.type : 'list';
+  obj.type = obj.type ? obj.type : "list";
   obj.monster = obj.monster ? obj.monster : null;
   return obj;
 };
@@ -213,18 +323,18 @@ const init = async function() {
       //   theFunctionThatLoopsTheGameOverAndFuckingOver();
       // },
       Travel: async () => {
-        const { directions: nsew } = game.locationData;
-        const choices = Object.keys(nsew).map(direction => ({
-          name: `${direction}:  ${nsew[direction]}`,
-          disabled: !nsew[direction]
-        }));
-        choices.push("Cancel");
-        let { direction } = await prompt({
-          type,
-          choices,
-          message: "Which direction do you want to travel?",
-          name: "direction"
-        });
+        // const { directions: nsew } = game.locationData;
+        // const choices = Object.keys(nsew).map(direction => ({
+        //   name: `${direction}:  ${nsew[direction]}`,
+        //   disabled: !nsew[direction]
+        // }));
+        // choices.push("Cancel");
+        // let { direction } = await prompt({
+        //   type,
+        //   choices,
+        //   message: "Which direction do you want to travel?",
+        //   name: "direction"
+        // });
         direction = direction.split(": ");
         if (direction === "Cancel") {
           theFunctionThatLoopsTheGameOverAndFuckingOver();
@@ -262,8 +372,8 @@ const init = async function() {
           gold < price
             ? "Come back when you have more money."
             : `${
-                healthPotions < 1 ? "You're all out of health potions. " : ""
-            }I can sell you up to ${maxPurchase} health potions. `;
+              healthPotions < 1 ? "You're all out of health potions. " : ""
+              }I can sell you up to ${maxPurchase} health potions. `;
         let choiceArray = [];
         if (maxPurchase > 0) {
           let arr = Array(parseInt(maxPurchase)).fill(0);
