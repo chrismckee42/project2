@@ -19,7 +19,7 @@ $(document).ready(function() {
     }).then(function(res) {
       console.log("test",res); //html...
       // Reload the page to get the updated prompt
-      // location.reload();
+      location.reload();
     });
   });
 });

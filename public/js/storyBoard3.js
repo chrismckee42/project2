@@ -1,81 +1,135 @@
 // var db = require("../models");
 
-
 //run with 'node ./public/js/inquirer'
-const inquirer = require("inquirer");
 const Game = require("./Game");
 const roles = require("./roles");
 // const { prompt } = inquirer;
 // const {prompt} = require("../../routes/htmlRoutes.js")
 // const prompt = htmlRoutes.prompt;
-console.log("IS THIS EVER FUCKIN READ?!?")
-const init = async (httpRoutes) => {
-  const prompt = httpRoutes;
-  const savedGames = {};
 
-  //init
+let playerName = '';
+let selectedRole = '';
+let game;
+
+
+module.exports = function({ name, response }) {
+  console.log({ name, response });
+  //default values:
+  let savedGames = [];
   const type = "list";
-  const { startGame } = await prompt({
-    type,
-    message: "Welcome to Adventure Game. Press start to continue.",
-    choices: [{ name: "start", value: true }],
-    name: "startGame"
-  });
-
-  console.log("start game:", startGame);
-
-  const startNewOrContinue = async function() {
-    const { continueOrNewGame } = await prompt({
-      type,
-      message: "Would you like to start a new game or continue a saved game?",
-      choices: ["Start New Game", "Continue Saved Game"],
-      name: "continueOrNewGame"
-    });
-
-    // create new game
-    if (continueOrNewGame === "Start New Game") {
-      const { 'pick name': name } = await prompt({
+  const error = `error ${{ name, response }}`;
+  //promptList
+  const promptList = {
+    init: res => {
+      return res === "startNewOrContinue"? {
+        type: "list",
+        message: "Welcome to Adventure Game. Please select start",
+        choices: ["Start Game", "Continue Game"],
+        name: "pick role",
+        monster: null,
+        background: "./img/tiles/town.jpg",
+        name: "startNewOrContinue"
+      } : { message: error };
+    },
+    startNewOrContinue: res => res === "Start Game" ? 
+       {
         type: "input",
         message: "Please enter your character's name:",
         name: "pick name",
         validate: name => name.length >= 3 && name.length < 45
-      });
-
-      console.log(roles);
-
-      const { 'pick role': role } = await prompt({
+      } : res === "Continue Game" ? {
+        type,
+        choices: ["placeholder"],
+        message: "Please choose your character's name",
+        name: "game"
+      } : { message: error },
+    "pick name" : res => {
+      playerName = res;
+      return ({
         type,
         message: "Please select your character role:",
         choices: Object.keys(roles),
         name: "pick role"
-      });
-
-      savedGames[name] = new Game({ role });
-      return name;
-    }
-
-    console.log("continue or new game:", continueOrNewGame);
-
-    if (continueOrNewGame === "Continue Saved Game") {
-      // if there are no saved games
-      let keys = Object.keys(savedGames);
-      if (!keys[0]) {
-        console.log("There are no saved games.");
-        startNewOrContinue();
-      } else {
-        const { name } = await prompt({
-          type,
-          choices: keys,
-          message: "Please choose your character's name",
-          name: "game"
-        });
-        return name;
-      }
+      })
+    },
+    "pick role" : res => {
+      selectedRole = res;
+      savedGames[playerName] = new Game({ selectedRole });
+      game = savedGames[playerName];
+      return ({
+        
+      })
     }
   };
+  let obj = promptList[name](response);
+  obj.background = obj.background ? obj.background : "./img/tiles/town.jpg";
+  obj.monster = obj.monster ? obj.monster : null;
+  return obj;
+};
 
-  let name = startGame ? await startNewOrContinue() : null;
-  let game = savedGames[name];
+const init = async function() {
+  // const type = "list";
+  // const { startGame } = await prompt({
+  //   type,
+  //   message: "Welcome to Adventure Game. Press start to continue.",
+  //   choices: [{ name: "start", value: true }],
+  //   name: "startGame"
+  // });
+
+  // console.log("start game:", startGame);
+
+  // const startNewOrContinue = async function() {
+  //   const { continueOrNewGame } = await prompt({
+  //     type,
+  //     message: "Would you like to start a new game or continue a saved game?",
+  //     choices: ["Start New Game", "Continue Saved Game"],
+  //     name: "continueOrNewGame"
+  //   });
+
+  //   // create new game
+  //   if (continueOrNewGame === "Start New Game") {
+  //     const { "pick name": name } = await prompt({
+  //       type: "input",
+  //       message: "Please enter your character's name:",
+  //       name: "pick name",
+  //       validate: name => name.length >= 3 && name.length < 45
+  //     });
+
+  //     console.log(roles);
+
+  //     const { "pick role": role } = await prompt({
+  //       type,
+  //       message: "Please select your character role:",
+  //       choices: Object.keys(roles),
+  //       name: "pick role"
+  //     });
+
+  //     savedGames[name] = new Game({ role });
+  //     return name;
+  //   }
+
+  //   console.log("continue or new game:", continueOrNewGame);
+
+  //   if (continueOrNewGame === "Continue Saved Game") {
+  //     // if there are no saved games
+  //     let keys = Object.keys(savedGames);
+  //     if (!keys[0]) {
+  //       console.log("There are no saved games.");
+  //       startNewOrContinue();
+  //     } else {
+  //       const { name } = await prompt({
+  //         type,
+  //         choices: keys,
+  //         message: "Please choose your character's name",
+  //         name: "game"
+  //       });
+  //       return name;
+  //     }
+  //   }
+  // };
+
+  // let name = startGame ? await startNewOrContinue() : null;
+  // let game = savedGames[name];
 
   const theFunctionThatLoopsTheGameOverAndFuckingOver = async function(
     lastDirection
@@ -190,7 +244,7 @@ const init = async (httpRoutes) => {
             ? "Come back when you have more money."
             : `${
                 healthPotions < 1 ? "You're all out of health potions. " : ""
-              }I can sell you up to ${maxPurchase} health potions. `;
+            }I can sell you up to ${maxPurchase} health potions. `;
         let choiceArray = [];
         if (maxPurchase > 0) {
           let arr = Array(parseInt(maxPurchase)).fill(0);
@@ -224,52 +278,64 @@ const init = async (httpRoutes) => {
         const { item } = await prompt({
           type,
           message: `Welcome to the blacksmith, ${this.role}! Here we can upgrade those weak stats of yours. What would you like to upgrade?`,
-          choices: ['$15: Boots (+5% dodge)', '$20: Weapon (+5 atk)', '$30: Helmet (+10 max hp)', 'Leave Store.'],
-          name: 'item'
+          choices: [
+            "$15: Boots (+5% dodge)",
+            "$20: Weapon (+5 atk)",
+            "$30: Helmet (+10 max hp)",
+            "Leave Store."
+          ],
+          name: "item"
         });
         const choose = {
-          '$15: Boots (+5% dodge)' : () => {
+          "$15: Boots (+5% dodge)": () => {
             if (gold > 15) {
               gold -= 15;
               game._inventory.gold = gold;
-              dodge += .5
+              dodge += 0.5;
               game._stats.dodge = dodge;
-              console.log(`You upgraded your boots! Your balance: $${gold}, Your dodge is now %${(dodge * 10).toFixed()}.`)
-
+              console.log(
+                `You upgraded your boots! Your balance: $${gold}, Your dodge is now %${(
+                  dodge * 10
+                ).toFixed()}.`
+              );
             } else {
               console.log(`You only have $${gold}. You need $15.`);
-            };
+            }
             responseTo["Go to Blacksmith"]();
           },
-          '$20: Weapon (+5 atk)' : () => {
+          "$20: Weapon (+5 atk)": () => {
             if (gold > 20) {
               gold -= 20;
               game._inventory.gold = gold;
               atk += 5;
               game._stats.atk = atk;
-              console.log(`You upgraded your weapon! Your balance: $${gold}, Your attack is now ${atk}.`)
+              console.log(
+                `You upgraded your weapon! Your balance: $${gold}, Your attack is now ${atk}.`
+              );
             } else {
               console.log(`You only have $${gold}. You need $20.`);
             }
             responseTo["Go to Blacksmith"]();
           },
-          '$30: Helmet (+10 max hp)' : () => {
+          "$30: Helmet (+10 max hp)": () => {
             if (gold > 30) {
               gold -= 30;
               game._inventory.gold = gold;
               fullHealth += 10;
               game._stats.fullHealth = fullHealth;
-              console.log(`You upgraded your helmet! Your balance: $${gold}, Your max hp is now ${fullHealth}.`);
+              console.log(
+                `You upgraded your helmet! Your balance: $${gold}, Your max hp is now ${fullHealth}.`
+              );
             } else {
               console.log(`You only have $${gold}. You need $30.`);
             }
             responseTo["Go to Blacksmith"]();
           },
-          'Leave Store.' : () => {
-            console.log(`Come back soon!`);
+          "Leave Store.": () => {
+            console.log("Come back soon!");
             theFunctionThatLoopsTheGameOverAndFuckingOver();
           }
-        }
+        };
         choose[item]();
         return;
       },
@@ -385,4 +451,4 @@ const init = async (httpRoutes) => {
 };
 //when a game starts... what the hell do we do?
 
-init();
+// init();

@@ -1,16 +1,16 @@
 const roles = require("./roles");
 
 class Game {
-  constructor({ role, playerCoords, inventory, name }) {
+  constructor({ selectedRole, playerCoords, inventory, name }) {
     this.playerCoords = playerCoords ? playerCoords : 5;
     this.tiles = [
       ["Swamp", "Field", "Abandoned Fort"],
       ["Forest", "Town", "Farm"],
       ["Dark Cave", "Rolling Hills", "Mountains"]
     ];
-    this.roleSelected = role;
+    this.roleSelected = selectedRole;
     this.name = name ? name : false;
-    let { hp, atk, dodge } = roles[role];
+    let { hp, atk, dodge } = roles[selectedRole];
     this._stats = { hp, atk, dodge, maxHP: hp }; //0 : hp, 1: atk, 2: dodge chance (x = x/10 times a strike will mss)
     this._inventory = inventory
       ? inventory

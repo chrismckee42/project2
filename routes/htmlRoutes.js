@@ -1,22 +1,19 @@
 var db = require("../models");
-// var storyBoard = require("../js/storyBoard.js");
-
+var storyBoard = require("../public/js/storyBoard3.js");
+let storage = {}
 //do i keep storyboard on the server side or do I try to figure out how tf to use handlebars on the client side....
 module.exports = function(app) {
   // on page start ask start game or continue game
+  let name = 'init';
+  let response = 'startNewOrContinue';
   app.get("/", function(req, res) {
     // const { startOrContinue } = req.body;
-    console.log(req.query)
-    const handlebarsObj =  {
-      type: "list",
-      message: "Welcome to Adventure Game. Please select start",
-      choices: ["Start Game", "Continue Game"],
-      name: "pick role",
-      monster: null,
-      background: "./img/tiles/town.jpg",
-      name: "startOrContinue"
-    };
-    handlebarsObj.type = handlebarsObj.type === "list" ? true : false;
+    [name, response] = req.query.name ? [req.query.name, req.query.response] : [name, response];
+    storage[name] = response;
+    console.log({storage})
+    const handlebarsObj = storyBoard({name, response});
+    console.log({handlebarsObj});
+
     db.Game.findAll({}).then(function(dbGames) {
       // console.log({ dbGames });
       res.render("index", handlebarsObj);
