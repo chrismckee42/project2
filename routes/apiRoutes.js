@@ -9,6 +9,7 @@ module.exports = function(app) {
   });
 
   app.put("/api/prompt/", function(req, res) {
+    console.log("req.body", req.body)
     db.Game.update(req.body, {
       // where: {
       //   id: req.body.id

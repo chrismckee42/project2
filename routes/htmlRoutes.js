@@ -1,5 +1,5 @@
 var db = require("../models");
-var storyBoard = require("../js/storyBoard.js");
+// var storyBoard = require("../js/storyBoard.js");
 //do i keep storyboard on the server side or do I try to figure out how tf to use handlebars on the client side....
 module.exports = function(app) {
   // on page start ask start game or continue game
