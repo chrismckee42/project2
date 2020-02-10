@@ -1,32 +1,16 @@
-var db = require("../models");
+// var db = require("../models");
 
-module.exports = function(app) {
-  // on page start ask start game or continue game
-  app.get("/", function(req, res) {
-    const { name } = req.body;
-    const handlebarsObj = name ? name : {
-      type: "list",
-      message: "Welcome to Adventure Game. Please select start",
-      choices: ["Start Game", "Continue Game"],
-      name: "pick role",
-      monster: null,
-      background: "./img/tiles/town.jpg",
-      name: "startOrContinue"
-    };
-    handlebarsObj.type = handlebarsObj.type === "list" ? true : false;
-    db.Game.findAll({}).then(function(dbGames) {
-      console.log({ dbGames });
-      res.render("index", handlebarsObj);
-    });
-  });
-  
+
 //run with 'node ./public/js/inquirer'
 const inquirer = require("inquirer");
 const Game = require("./Game");
 const roles = require("./roles");
-const { prompt } = inquirer;
-
-const init = async () => {
+// const { prompt } = inquirer;
+// const {prompt} = require("../../routes/htmlRoutes.js")
+// const prompt = htmlRoutes.prompt;
+console.log("IS THIS EVER FUCKIN READ?!?")
+const init = async (httpRoutes) => {
+  const prompt = httpRoutes;
   const savedGames = {};
 
   //init

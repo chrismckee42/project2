@@ -9,14 +9,14 @@ module.exports = function(app) {
   });
 
   app.put("/api/prompt/", function(req, res) {
-    console.log("req.body", req.body)
-    db.Game.update(req.body, {
+    console.log("req.body", req.body);
+    // db.Game.update(req.body, {
       // where: {
       //   id: req.body.id
       // }
-    }).then(function(dbPost) {
-      res.json(dbPost);
-    });
+    // }).then(function(dbPost) {
+    //   res.json(dbPost);
+    // });
   });
 
 

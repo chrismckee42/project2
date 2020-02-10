@@ -1,11 +1,13 @@
 var db = require("../models");
 // var storyBoard = require("../js/storyBoard.js");
+
 //do i keep storyboard on the server side or do I try to figure out how tf to use handlebars on the client side....
 module.exports = function(app) {
   // on page start ask start game or continue game
   app.get("/", function(req, res) {
-    const { name } = req.body;
-    const handlebarsObj = name ? name : {
+    // const { startOrContinue } = req.body;
+    console.log(req.query)
+    const handlebarsObj =  {
       type: "list",
       message: "Welcome to Adventure Game. Please select start",
       choices: ["Start Game", "Continue Game"],
@@ -16,10 +18,11 @@ module.exports = function(app) {
     };
     handlebarsObj.type = handlebarsObj.type === "list" ? true : false;
     db.Game.findAll({}).then(function(dbGames) {
-      console.log({ dbGames });
+      // console.log({ dbGames });
       res.render("index", handlebarsObj);
     });
   });
+
 
 
   // Load game page and pass in an game by id

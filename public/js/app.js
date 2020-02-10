@@ -6,20 +6,20 @@ $(document).ready(function() {
   $(".choices, .inputBtn").on("click", function() {
     let choice = $(this).text();
     let input = $(".inputText").val();
-    let response = choice.length > input.length? choice:input;
+    let response = input ? input : choice;
 
     let name = $(".message").attr("name");
     let data = {};
     data[name] = response;
-
+    console.log("data", data)
     // Send the PUT request.
-    $.ajax("/api/prompt/", {
-      type: "PUT",
-      data
+    $.ajax("/", {
+      type: "get",
+      data: {name, response}
     }).then(function(res) {
-      console.log("test",res,  { name, response });
+      console.log("test",res); //html...
       // Reload the page to get the updated prompt
-      location.reload();
+      // location.reload();
     });
   });
 });
