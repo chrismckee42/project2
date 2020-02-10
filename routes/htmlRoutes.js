@@ -14,10 +14,19 @@ module.exports = function(app) {
     const handlebarsObj = storyBoard({name, response});
     console.log({handlebarsObj});
 
+    if (storage['pick name'] && storage['pick role']){
+      //game has been initialized and should be saved.
+    }
+
+    if ('startNewOrContinue' === 'Continue Game'){
+      //database should be queried and return results for existing games
+    }
+
     db.Game.findAll({}).then(function(dbGames) {
       // console.log({ dbGames });
       res.render("index", handlebarsObj);
     });
+    
   });
 
 
