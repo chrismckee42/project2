@@ -1,20 +1,21 @@
 var db = require("../models");
 
-
 module.exports = function(app) {
   // Load index page
   app.get("/", function(req, res) {
-    const handlebarsObj = {
-      type: "list",
-      message: "Please select your character role:",
-      choices: ["Barb", "Druid", "Rogue"],
-      name: "pick role",
-      monster: "./img/monsters/owlbear.png",
-      background: "./img/tiles/town.jpg"
-    };
+    const { body: {name} } = req;
+    const handlebarsObj = name ? name : {
+        type: "list",
+        message: "Please select your character role:",
+        // choices: ["Barb", "Druid", "Rogue"],
+        name: "pick role",
+        monster: "./img/monsters/owlbear.png",
+        background: "./img/tiles/town.jpg",
+        name: "choose role"
+      };
     handlebarsObj.type = handlebarsObj.type === "list" ? true : false;
     db.Game.findAll({}).then(function(dbGames) {
-      console.log({dbGames})
+      console.log({ dbGames });
       res.render("index", handlebarsObj);
     });
   });

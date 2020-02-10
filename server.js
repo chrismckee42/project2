@@ -33,7 +33,7 @@ if (process.env.NODE_ENV === "test") {
 db.sequelize.sync(syncOptions).then(function() {
   app.listen(PORT, function() {
     const str = "==> 🌎 Listening on port %s. Visit http://localhost:%s/.";
-    console.log(str, PORT);
+    console.log(str, PORT, PORT);
   });
 });
 

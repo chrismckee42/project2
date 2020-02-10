@@ -1,19 +1,20 @@
 var db = require("../models");
 
 module.exports = function(app) {
+
   app.get("/api/games", function(req, res) {
     db.Game.findAll({}).then(function(dbGames) {
       res.json(dbGames);
     });
   });
 
-  app.get("/api/games/:id", function(req, res) {
-    db.Game.findOne({
+  app.put("/api/userPrompt/", function(req, res) {
+    db.Game.update(req.body, {
       where: {
-        id: req.params.id
+        id: req.body.id
       }
-    }).then(function(dbGame) {
-      res.json(dbGame);
+    }).then(function(dbPost) {
+      res.json(dbPost);
     });
   });
 
@@ -22,6 +23,7 @@ module.exports = function(app) {
       res.json(dbGame);
     });
   });
+
 
   app.delete("/api/games/:id", function(req, res) {
     db.Game.destroy({ where: { id: req.params.id } }).then(function(dbGame) {

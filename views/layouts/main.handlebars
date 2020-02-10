@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="./styles/styles.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<style>
 		header {
 			background-image: url("{{{background}}}");
@@ -16,27 +17,30 @@
 </head>
 <body>
 	<div class="container">
-	<header id="masthead"  styles="{{background}}">
+	<header id="masthead">
 		<img id="monster" src="{{monster}}" class="rounded mx-auto d-block" alt="{{monster}}">
 	</header>
 	<div id="main-container" class="container">
 		<section class="main-section">
-			<p class="rules">{{message}}</p>
+			<p class="message" name="{{name}}">{{message}}</p>
 			<div>
-				{{#if type}}
+				{{#if choices}}
 				{{#each choices}}
-				<button type="button" class="btn btn-success btn-lg btn-block">{{this}}</button>
+				<button type="button" class="choices btn btn-success btn-lg btn-block">{{this}}</button>
 				{{/each}}
 				{{/if}}
 
-				
+				{{#unless choices}}
+					<div class="form-group form-check">
+						<input class="inputText form-control form-control-lg" type="text" placeholder="">
+						<button class="inputBtn btn btn-primary">Submit</button>
+					</div>
+				{{/unless}}
 			</div>
 		</section>
 	</div>
 </div>
-	
 	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.js"></script>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+	<script src="./js/app.js"></script>
 </body>
 </html>
