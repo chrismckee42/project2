@@ -8,15 +8,16 @@ module.exports = function(app) {
     });
   });
 
-  app.put("/api/userPrompt/", function(req, res) {
+  app.put("/api/prompt/", function(req, res) {
     db.Game.update(req.body, {
-      where: {
-        id: req.body.id
-      }
+      // where: {
+      //   id: req.body.id
+      // }
     }).then(function(dbPost) {
       res.json(dbPost);
     });
   });
+
 
   app.post("/api/games", function(req, res) {
     db.Game.create(req.body).then(function(dbGame) {

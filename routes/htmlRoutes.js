@@ -1,24 +1,25 @@
 var db = require("../models");
 
 module.exports = function(app) {
-  // Load index page
+  // on page start ask start game or continue game
   app.get("/", function(req, res) {
-    const { body: {name} } = req;
+    const { name } = req.body;
     const handlebarsObj = name ? name : {
-        type: "list",
-        message: "Please select your character role:",
-        // choices: ["Barb", "Druid", "Rogue"],
-        name: "pick role",
-        monster: "./img/monsters/owlbear.png",
-        background: "./img/tiles/town.jpg",
-        name: "choose role"
-      };
+      type: "list",
+      message: "Welcome to Adventure Game. Please select start",
+      choices: ["Start Game", "Continue Game"],
+      name: "pick role",
+      monster: null,
+      background: "./img/tiles/town.jpg",
+      name: "startOrContinue"
+    };
     handlebarsObj.type = handlebarsObj.type === "list" ? true : false;
     db.Game.findAll({}).then(function(dbGames) {
       console.log({ dbGames });
       res.render("index", handlebarsObj);
     });
   });
+
 
   // Load game page and pass in an game by id
   app.get("/game/:id", function(req, res) {

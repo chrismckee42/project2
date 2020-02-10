@@ -1,3 +1,25 @@
+var db = require("../models");
+
+module.exports = function(app) {
+  // on page start ask start game or continue game
+  app.get("/", function(req, res) {
+    const { name } = req.body;
+    const handlebarsObj = name ? name : {
+      type: "list",
+      message: "Welcome to Adventure Game. Please select start",
+      choices: ["Start Game", "Continue Game"],
+      name: "pick role",
+      monster: null,
+      background: "./img/tiles/town.jpg",
+      name: "startOrContinue"
+    };
+    handlebarsObj.type = handlebarsObj.type === "list" ? true : false;
+    db.Game.findAll({}).then(function(dbGames) {
+      console.log({ dbGames });
+      res.render("index", handlebarsObj);
+    });
+  });
+  
 //run with 'node ./public/js/inquirer'
 const inquirer = require("inquirer");
 const Game = require("./Game");
@@ -6,75 +28,6 @@ const { prompt } = inquirer;
 
 const init = async () => {
   const savedGames = {};
-
-  // function newGame(name, role) {
-  //   return {
-  //     name,
-  //     role,
-  //     hp: stats[role][0],
-  //     hpMax: stats[role][0],
-  //     attack: stats[role][1],
-  //     dodge: stats[role][2]
-  //   };
-  //let i = roles.indexOf(role)
-  // var myGame = new Game(
-  //   name, //name
-  //   role, //role
-  //   5, //location
-  //   stats[role][0], //hp
-  //   stats[role][0], //hpMax
-  //   stats[role][1], //attack
-  //   stats[role][2], //dodge
-  //   0, //gold
-  //   0, //potions
-  //   30, //monster1HP
-  //   50, //monster2HP
-  //   60, //monster3HP
-  //   100, //monster4HP
-  //   false, //treasure1Found
-  //   false, //treasure2Found
-  //   false, //treasure3Found
-  //   false, //treasure4Found
-  //   false, //treasure5Found
-  //   false, //treasure1Sold
-  //   false, //treasure2Sold
-  //   false, //treasure3Sold
-  //   false, //treasure4Sold
-  //   false //treasure5Sold
-  // )
-  // }
-
-  // function loadGame(gameObj) {
-  //   return new Game(
-  //     gameObj.name,
-  //     gameObj.role,
-  //     gameObj.location,
-  //     gameObj.hp,
-  //     gameObj.hpMax,
-  //     gameObj.attack,
-  //     gameObj.dodge,
-  //     gameObj.gold,
-  //     gameObj.potions,
-  //     gameObj.monster1HP,
-  //     gameObj.monster2HP,
-  //     gameObj.monster3HP,
-  //     gameObj.monster4HP,
-  //     gameObj.treasure1Found,
-  //     gameObj.treasure2Found,
-  //     gameObj.treasure3Found,
-  //     gameObj.treasure4Found,
-  //     gameObj.treasure5Found,
-  //     gameObj.treasure1Sold,
-  //     gameObj.treasure2Sold,
-  //     gameObj.treasure3Sold,
-  //     gameObj.treasure4Sold,
-  //     gameObj.treasure5Sold
-  //   );
-  // }
-
-  //test:
-  // const newGame = new Game("rouge");
-  // console.log(newGame.locationData);
 
   //init
   const type = "list";
@@ -86,8 +39,6 @@ const init = async () => {
   });
 
   console.log("start game:", startGame);
-
-
 
   const startNewOrContinue = async function() {
     const { continueOrNewGame } = await prompt({
@@ -229,7 +180,7 @@ const init = async () => {
       "Go to Inn": async () => {
         const { hp, maxHP } = game.stats;
         let couldUseRest = maxHP - hp > 0;
-        const response = await prompt({
+        const { response } = await prompt({
           type,
           // eslint-disable-next-line prettier/prettier
           message: `${ couldUseRest ? "Some Zzz's might help with those bruises. " : "" } Would you like to rest a bit?`,
