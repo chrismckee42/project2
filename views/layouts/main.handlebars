@@ -3,22 +3,33 @@
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="./styles/styles.css">
+	<style>
+		header {
+			background-image: url("{{{background}}}");
+			-webkit-background-size: cover;
+			-moz-background-size: cover;
+			-o-background-size: cover;
+			background-size: cover;
+			max-height: 450px;
+		}
+	</style>
 </head>
 <body>
 	<div class="container">
-	<header id="masthead">
-		<img id="monster" src="owlbear.png" class="rounded mx-auto d-block" alt="owlbear.png">
-	</header styles="background-image: url('./Background.jpg');">
+	<header id="masthead"  styles="{{background}}">
+		<img id="monster" src="{{monster}}" class="rounded mx-auto d-block" alt="{{monster}}">
+	</header>
 	<div id="main-container" class="container">
 		<section class="main-section">
-			
 			<p class="rules">{{message}}</p>
 			<div>
-        {{type}}
-				<button type="button" class="btn btn-success btn-lg btn-block">North</button>
-				<button type="button" class="btn btn-success btn-lg btn-block">South</button>
-				<button type="button" class="btn btn-success btn-lg btn-block">East</button>
-				<button type="button" class="btn btn-success btn-lg btn-block">West</button>
+				{{#if type}}
+				{{#each choices}}
+				<button type="button" class="btn btn-success btn-lg btn-block">{{this}}</button>
+				{{/each}}
+				{{/if}}
+
+				
 			</div>
 		</section>
 	</div>

@@ -1,21 +1,21 @@
 var db = require("../models");
 
-const roles = ["barb", "druid", "rogue"];
-const stats = {
-  //0 : hp, 1: atk, 2: dodge chance (x = x/10 times a strike will mss)
-  barb: [100, 15, 1],
-  druid: [80, 12, 4],
-  rogue: [50, 8, 6]
-};
 
 module.exports = function(app) {
   // Load index page
   app.get("/", function(req, res) {
+    const handlebarsObj = {
+      type: "list",
+      message: "Please select your character role:",
+      choices: ["Barb", "Druid", "Rogue"],
+      name: "pick role",
+      monster: "./img/monsters/owlbear.png",
+      background: "./img/tiles/town.jpg"
+    };
+    handlebarsObj.type = handlebarsObj.type === "list" ? true : false;
     db.Game.findAll({}).then(function(dbGames) {
-      res.render("index", {
-        msg: "Welcome!",
-        games: dbGames
-      });
+      console.log({dbGames})
+      res.render("index", handlebarsObj);
     });
   });
 
