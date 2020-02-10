@@ -6,7 +6,7 @@ const roles = require("./roles");
 // const { prompt } = inquirer;
 // const {prompt} = require("../../routes/htmlRoutes.js")
 // const prompt = htmlRoutes.prompt;
-
+let type = 'list';
 let playerName = '';
 let selectedRole = '';
 let game;
@@ -16,7 +16,6 @@ module.exports = function({ name, response }) {
   console.log({ name, response });
   //default values:
   let savedGames = [];
-  const type = "list";
   const error = `error ${{ name, response }}`;
   //promptList
   const promptList = {
@@ -38,7 +37,6 @@ module.exports = function({ name, response }) {
         name: "pick name",
         validate: name => name.length >= 3 && name.length < 45
       } : res === "Continue Game" ? {
-        type,
         choices: ["placeholder"],
         message: "Please choose your character's name",
         name: "game"
@@ -46,7 +44,6 @@ module.exports = function({ name, response }) {
     "pick name" : res => {
       playerName = res;
       return ({
-        type,
         message: "Please select your character role:",
         choices: Object.keys(roles),
         name: "pick role"
@@ -57,12 +54,34 @@ module.exports = function({ name, response }) {
       savedGames[playerName] = new Game({ selectedRole });
       game = savedGames[playerName];
       return ({
-        
+        message: `"Welcome" to town! Here you will be able to sell treasure, buy health potions, heal at the inn, or upgrade weapons and armor at the blacksmith.`,
+        choices: ["Check Inventory", "Check my own stats", "Travel", "Go to Inn", "Go to Apothecary", "Go to Blacksmith", "Go to Appraiser"],
+        name: 'decision',
       })
-    }
-  };
+    },
+    "decision" : res => 
+      res === "Check Inventory" ? (function(){
+        const { gold, healthPotions, treasureInPosession } = game.inventory;
+        return ({
+          message: `Gold: $${gold} \n Health Potions: ${healthPotions} \n Treasure: ${treasureInPosession}`,
+          choices: ["Check Inventory", "Check my own stats", "Travel", "Go to Inn", "Go to Apothecary", "Go to Blacksmith", "Go to Appraiser"],
+          name: 'decision',
+        })
+      })() : 
+      res === "Check my own stats" ? (function(){
+        const { hp, atk, dodge, maxHP } = game.stats;
+        return ({
+          message: `Your health is ${hp}/${maxHP}. Your attack damage is ${atk}. Your dodge chance is ${(dodge * 10).toFixed()}%.`,
+          choices: ["Check Inventory", "Check my own stats", "Travel", "Go to Inn", "Go to Apothecary", "Go to Blacksmith", "Go to Appraiser"],
+          name: 'decision'
+        })
+      })(): {message : error},
+
+    
+  }
   let obj = promptList[name](response);
   obj.background = obj.background ? obj.background : "./img/tiles/town.jpg";
+  obj.type = obj.type ? obj.type : 'list';
   obj.monster = obj.monster ? obj.monster : null;
   return obj;
 };
@@ -185,14 +204,14 @@ const init = async function() {
     const selection = currentLocation === "Town" ? "town" : monsterIsAlive ?"monsterIsAlive" : treasureIsAvailable? "treasureIsAvailable" :"nothingSpecial";
     const { message, choices } = promptList[selection];
     const responseTo = {
-      "Check Inventory": () => {
-        const { gold, healthPotions, treasureInPosession } = game.inventory;
-        console.log(`Gold: $${gold}`);
-        console.log(`Health Potions: ${healthPotions}`);
-        console.log(`Treasure: ${treasureInPosession}`);
-        // console.log("inventory is not set up yet");
-        theFunctionThatLoopsTheGameOverAndFuckingOver();
-      },
+      // "Check Inventory": () => {
+      //   const { gold, healthPotions, treasureInPosession } = game.inventory;
+      //   console.log(`Gold: $${gold}`);
+      //   console.log(`Health Potions: ${healthPotions}`);
+      //   console.log(`Treasure: ${treasureInPosession}`);
+      //   // console.log("inventory is not set up yet");
+      //   theFunctionThatLoopsTheGameOverAndFuckingOver();
+      // },
       Travel: async () => {
         const { directions: nsew } = game.locationData;
         const choices = Object.keys(nsew).map(direction => ({
@@ -381,13 +400,13 @@ const init = async function() {
         }
         return;
       },
-      "Check my own stats": () => {
-        const { hp, atk, dodge, maxHP } = game.stats;
-        console.log(`Your health is ${hp}/${maxHP}.`);
-        console.log(`Your attack damage is ${atk}.`);
-        console.log(`Your dodge chance is ${(dodge * 10).toFixed()}%.`);
-        return theFunctionThatLoopsTheGameOverAndFuckingOver();
-      },
+      // "Check my own stats": () => {
+      //   const { hp, atk, dodge, maxHP } = game.stats;
+      //   console.log(`Your health is ${hp}/${maxHP}.`);
+      //   console.log(`Your attack damage is ${atk}.`);
+      //   console.log(`Your dodge chance is ${(dodge * 10).toFixed()}%.`);
+      //   return theFunctionThatLoopsTheGameOverAndFuckingOver();
+      // },
       "Attack monster": () => {
         //    let [monsterName, hp, atk, monsterIsAlive] = monster || planB;
         let { hp, atk, dodge, maxHP } = game.stats;
