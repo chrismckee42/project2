@@ -4,6 +4,7 @@ $(document).ready(function() {
 
   //list prompt
   $(".choices, .inputBtn").on("click", function() {
+    console.count("CLICK!!")
     let choice = $(this).text();
     let input = $(".inputText").val();
     let response = input ? input : choice;

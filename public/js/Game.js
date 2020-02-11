@@ -123,7 +123,9 @@ class Game {
     //run every time you want to save the game
   }
   updateCoords(nsew) {
+    console.log(nsew,)
     let [y, x] = this.location[this.playerCoords];
+    console.log([x, y])
     if (nsew === "north") {
       [x, y] = [x, y - 1];
     }
@@ -137,10 +139,13 @@ class Game {
       [x, y] = [x - 1, y];
     }
     // console.log({x, y})
+    console.log(this.playerCoords, "<-------------------")
+    console.log([x, y])
     this.playerCoords = this.location.reduce(
       (acc, cur, i) => (cur[1] === x && cur[0] === y ? i : acc),
       null
     );
+    console.log(this.playerCoords, "<-------------------")
   }
 }
 
