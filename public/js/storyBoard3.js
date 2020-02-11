@@ -88,14 +88,14 @@ module.exports = function ({
     },
     decision: res =>
     res === 'Attack monster' ? (function(){
-      const {
+      let {
         currentLocation,
         monster,
         treasure
       } = game.locationData;
         //    let [monsterName, hp, atk, monsterIsAlive] = monster || planB;
         let { hp, atk, dodge, maxHP } = game.stats;
-        let [monsterName, monsterHP, monsterATK] = monster;
+        let [monsterName, monsterHP, monsterATK] = monster ? monster : [null, null, null];
         let monsterID = game.monsters.reduce(
           (acc, cur, i) => (cur[0] === monsterName ? i : acc),
           null
@@ -115,16 +115,17 @@ module.exports = function ({
           
         }
         game.stats.hp = hp;
-        game.monsters[monsterID][1] = monsterHP;
-        if (monsterHP <= 0) {
+        if (monster) game.monsters[monsterID][1] = monsterHP;
+        if (monster && monsterHP <= 0) {
           console.log(`Congratulations, you killed the ${monsterName}`);
           game.monsters[monsterID][3] = false;
         }
         
-        
+        // console.log(game.)
         let planB = Array(4).fill(null);
-        let [, , , monsterIsAlive] = monster || planB;
-        let [treasureName, , , treasureIsAvailable] = treasure || planB;
+        let [, , , monsterIsAlive] = monster ? monster : planB;
+        //  treasure = game.locationData.treasure
+        let [treasureName, , , treasureIsAvailable] = treasure ? treasure : planB;
         let promptList = {
           town: {
             // eslint-disable-next-line prettier/prettier
@@ -342,7 +343,7 @@ module.exports = function ({
       let item = res;
       selectedItem = res;
       
-      let idx = game._inventory.treasureInPosession.indexOf(idx);
+      let idx = game._inventory.treasureInPosession.indexOf(item);
       appraisedValue = game._inventory.treasure[selectedItem][1];
       game._inventory.treasureInPosession.splice(idx, 1);
       game._inventory.gold += price;
@@ -517,8 +518,8 @@ module.exports = function ({
         } = game.locationData;
         let messageA = `You travel ${newNSEW} to the ${currentLocation}. `;
         let planB = Array(4).fill(null);
-        let [monsterName, hp, atk, monsterIsAlive] = monster || planB;
-        let [treasureName, , , treasureIsAvailable] = treasure || planB;
+        let [monsterName, hp, atk, monsterIsAlive] = monster ? monster : planB;
+        let [treasureName, , , treasureIsAvailable] = treasure ?  treasure :  planB;
         let promptList = {
           town: {
             // eslint-disable-next-line prettier/prettier
