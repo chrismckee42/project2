@@ -5,7 +5,7 @@
 //run with 'node ./public/js/inquirer'
 const Game = require('./Game');
 const roles = require('./roles');
-const API = require('./index.js')
+var db = require('../../models');
 // const { prompt } = inquirer;
 // const {prompt} = require("../../routes/htmlRoutes.js")
 // const prompt = htmlRoutes.prompt;
@@ -67,7 +67,25 @@ module.exports = function ({
     },
     'pick role': res => {
       selectedRole = res;
-      // API.createGame(playerName,selectedRole)
+      
+      let rolesTemp = {
+        //0 : hp, 1: atk, 2: dodge chance (x = x/10 times a strike will mss)
+        barb: [100, 15, 1],
+        druid: [80, 12, 4],
+        rogue: [50, 8, 6],
+      };
+
+      db.Game.create({
+          name: playerName,
+          role: selectedRole,
+          hp: rolesTemp[selectedRole][0],
+          hpMax: rolesTemp[selectedRole][0],
+          attack: rolesTemp[selectedRole][1],
+          dodge: rolesTemp[selectedRole][2],
+      }).then(function(dbGame) {
+          //res.json(dbGame);
+      });
+
       savedGames[playerName] = new Game({
         selectedRole
       });
@@ -115,7 +133,7 @@ module.exports = function ({
           
         }
         game.stats.hp = hp;
-        if (monster) game.monsters[monsterID][1] = monsterHP;
+        if (monster) {game.monsters[monsterID][1] = monsterHP;}
         if (monster && monsterHP <= 0) {
           console.log(`Congratulations, you killed the ${monsterName}`);
           game.monsters[monsterID][3] = false;
@@ -346,7 +364,7 @@ module.exports = function ({
       let idx = game._inventory.treasureInPosession.indexOf(item);
       const {treasure} = game._inventory
       console.log({treasure})
-      let row =  game._inventory.treasure.filter(a => a[0] === res)
+      let row = game._inventory.treasure.filter(a => a[0] === res)
       console.log({res})
       console.log({row})
       appraisedValue = game._inventory.treasure.filter(a => a[0] === res)[0][1]
@@ -365,7 +383,7 @@ module.exports = function ({
         if (isNaN(game._inventory.gold) ){game._inventory.gold = 100;}
       return({
         type,
-        message: `You should go to the blacksmith and improve your attributes.`,
+        message: 'You should go to the blacksmith and improve your attributes.',
         choices: ['Run Away'],
         name: 'decision'
       }); 
@@ -526,7 +544,7 @@ module.exports = function ({
         let messageA = `You travel ${newNSEW} to the ${currentLocation}. `;
         let planB = Array(4).fill(null);
         let [monsterName, hp, atk, monsterIsAlive] = monster ? monster : planB;
-        let [treasureName, , , treasureIsAvailable] = treasure ?  treasure :  planB;
+        let [treasureName, , , treasureIsAvailable] = treasure ? treasure : planB;
         let promptList = {
           town: {
             // eslint-disable-next-line prettier/prettier
