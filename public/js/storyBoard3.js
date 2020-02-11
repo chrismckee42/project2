@@ -86,6 +86,11 @@ module.exports = function ({
     },
     decision: res =>
     res === "Attack monster" ? (function(){
+      const {
+        currentLocation,
+        monster,
+        treasure
+      } = game.locationData;
         //    let [monsterName, hp, atk, monsterIsAlive] = monster || planB;
         let { hp, atk, dodge, maxHP } = game.stats;
         let [monsterName, monsterHP, monsterATK] = monster;
@@ -94,17 +99,17 @@ module.exports = function ({
           null
         );
         monsterHP -= atk;
-        let message = `You attack the monster for ${atk} damage. Its health drops to ${monsterHP}.`;
+        let messageA = `You attack the monster for ${atk} damage. Its health drops to ${monsterHP}.`;
         let didjaDodge = Math.random() * 10 <= dodge;
         if (didjaDodge && monsterHP > 0) {
-          message =
-            `${message} The ${monsterName} attacked you, but you dodged the attack!`
+          messageA =
+            `${messageA} The ${monsterName} attacked you, but you dodged the attack!`
           
         } else if (monsterHP > 0) {
           hp -= monsterATK;
           game._stats.hp = hp;
-          message =
-            `${message} The ${monsterName} attacked you. Your health is now ${hp}/${maxHP}!`
+          messageA =
+            `${messageA} The ${monsterName} attacked you. Your health is now ${hp}/${maxHP}!`
           
         }
         game.stats.hp = hp;
@@ -114,12 +119,62 @@ module.exports = function ({
           game.monsters[monsterID][3] = false;
         }
         
+        
+        let planB = Array(4).fill(null);
+        let [, , , monsterIsAlive] = monster || planB;
+        let [treasureName, , , treasureIsAvailable] = treasure || planB;
+        let promptList = {
+          town: {
+            // eslint-disable-next-line prettier/prettier
+            message: `${messageA} Welcome back to town! Here you will be able to sell treasure, buy health potions, heal at the inn, or upgrade weapons and armor at the blacksmith.`,
+            // eslint-disable-next-line prettier/prettier
+            choices: ["Check Inventory", "Check my own stats", "Travel", "Go to Inn", "Go to Apothecary", "Go to Blacksmith", "Go to Appraiser"],
+          },
+          monsterIsAlive: {
+            message: `${messageA}You made it to ${currentLocation}. Oh no, it's a ${monsterName} with ${atk} attack, and ${hp} hp. ${
+              // eslint-disable-next-line prettier/prettier
+              treasureIsAvailable ? `It seems to be guarding a ${treasureName}. ` : ""
+            } What do you want to do?`,
+            // eslint-disable-next-line prettier/prettier
+            choices: ["Check my own stats", "Attack monster", "Run Away", "Check inventory for health potions"]
+          },
+          treasureIsAvailable: {
+            // eslint-disable-next-line prettier/prettier
+            message: `${messageA}${monsterName && !monsterIsAlive ? `There appears to be a dead ${monsterName}. You must've killed it. ` : ""}Well there appears to be some treasure. A ${treasureName} by the looks of it. What do you want to do?`,
+            choices: ["Run Away", "Take treasure"]
+          },
+          treasureTook: {
+            // eslint-disable-next-line prettier/prettier
+            message: `${messageA}You took the ${treasureName}. ${monsterName && !monsterIsAlive ? `I guess the ${monsterName} won't be needing it. ` : ""}Where to now?`,
+            // eslint-disable-next-line prettier/prettier
+            choices: ["Travel", "Check Inventory", "Check my own stats", "Check inventory for health potions"]
+          },
+          nothingSpecial: {
+            message: `${messageA}Doesn't seem like anything's here...`,
+            choices: [
+              "Travel",
+              "Check Inventory",
+              "Check my own stats",
+              "Check inventory for health potions"
+            ]
+          },
+          navigate: {
+            message: "",
+            choices: []
+          }
+        };
+        // eslint-disable-next-line prettier/prettier
+        const selection = currentLocation === "Town" ? "town" : monsterIsAlive ? "monsterIsAlive" : treasureIsAvailable ? "treasureIsAvailable" : "nothingSpecial";
+        const {
+          message,
+          choices
+        } = promptList[selection];
+        message = messageA + message;
         return {
-          messages,
-         choices:  ["Check my own stats", "Attack monster", "Run Away", "Check inventory for health potions"],
-         name: 'decision'
-
-        }
+          message,
+          choices,
+          name: "decision"
+        };
       
     })() :
       res === "Take treasure" ? (function () {
