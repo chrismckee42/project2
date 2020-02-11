@@ -342,12 +342,17 @@ module.exports = function ({
     appraiseItem: res => {
       let item = res;
       selectedItem = res;
-      
+      console.log('----------------------------------------------=')
       let idx = game._inventory.treasureInPosession.indexOf(item);
       const {treasure} = game._inventory
       console.log({treasure})
-      appraisedValue = game._inventory.treasure.filter(a => a[0] === res)[1]
+      let row =  game._inventory.treasure.filter(a => a[0] === res)
+      console.log({res})
+      console.log({row})
+      appraisedValue = game._inventory.treasure.filter(a => a[0] === res)[0][1]
       game._inventory.treasureInPosession.splice(idx, 1);
+      console.log('----------------------------------------------=')
+      console.log({appraisedValue})
       game._inventory.gold += appraisedValue;
       return {
         type,
@@ -357,10 +362,10 @@ module.exports = function ({
       }
     },
     appraiseItem2: res => {
-        
+        if (isNaN(game._inventory.gold) ){game._inventory.gold = 100;}
       return({
         type,
-        message: `$${price} has now been added to your gold. You should go to the blacksmith and improve your attributes.`,
+        message: `You should go to the blacksmith and improve your attributes.`,
         choices: ['Run Away'],
         name: 'decision'
       }); 
