@@ -13,23 +13,23 @@ var API = {
     */
     return $.ajax({
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       },
-      type: "POST",
-      url: "api/games",
+      type: 'POST',
+      url: 'api/games',
       data: JSON.stringify(game)
     });
   },
   getGames: function() {
     return $.ajax({
-      url: "api/games",
-      type: "GET" // Check
+      url: 'api/games',
+      type: 'GET' // Check
     });
   },
   loadGame: function() {
     return $.ajax({
-      url: "api/games/" + id,
-      type: "GET" // Check
+      url: 'api/games/' + id,
+      type: 'GET' // Check
     });
   },
   saveGame: function(game) {
@@ -61,19 +61,19 @@ var API = {
     };
     */
     return $.ajax({
-      url: "api/games",
-      type: "PUT", // Check
+      url: 'api/games',
+      type: 'PUT', // Check
       data: JSON.stringify(game)
     });
   },
   deleteGame: function(id) {
     return $.ajax({
-      url: "api/games/" + id,
-      type: "DELETE" // Check
+      url: 'api/games/' + id,
+      type: 'DELETE' // Check
     });
   },
   test: function() {
-    console.log("test complete!")
+    console.log('test complete!')
   }
 };
 
