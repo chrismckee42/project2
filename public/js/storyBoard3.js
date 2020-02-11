@@ -344,9 +344,11 @@ module.exports = function ({
       selectedItem = res;
       
       let idx = game._inventory.treasureInPosession.indexOf(item);
-      appraisedValue = game._inventory.treasure[selectedItem][1];
+      const {treasure} = game._inventory
+      console.log({treasure})
+      appraisedValue = game._inventory.treasure.filter(a => a[0] === res)[1]
       game._inventory.treasureInPosession.splice(idx, 1);
-      game._inventory.gold += price;
+      game._inventory.gold += appraisedValue;
       return {
         type,
         message: `Hey, that's a nice ${selectedItem}! I'll here's $${appraisedValue} for your trouble. Whadda ya say?`,
