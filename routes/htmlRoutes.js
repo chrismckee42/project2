@@ -26,10 +26,10 @@ module.exports = function(app) {
       // console.log({ dbGames });
       res.render("index", handlebarsObj);
     });
-    
+
   });
 
-
+ 
 
   // Load game page and pass in an game by id
   app.get("/game/:id", function(req, res) {

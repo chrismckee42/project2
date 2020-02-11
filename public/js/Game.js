@@ -2,6 +2,7 @@ const roles = require("./roles");
 
 class Game {
   constructor({ selectedRole, playerCoords, inventory, name }) {
+    this.count = 0
     this.roleSelected = selectedRole;
     playerCoords = playerCoords > 0 && playerCoords < 10 ? playerCoords : 5
     this.playerCoords = 5;
@@ -122,30 +123,42 @@ class Game {
   saveGame() {
     //run every time you want to save the game
   }
-  updateCoords(nsew) {
-    console.log(nsew,)
-    let [y, x] = this.location[this.playerCoords];
-    console.log([x, y])
-    if (nsew === "north") {
-      [x, y] = [x, y - 1];
-    }
-    if (nsew === "south") {
-      [x, y] = [x, y + 1];
-    }
-    if (nsew === "east") {
-      [x, y] = [x + 1, y];
-    }
-    if (nsew === "west") {
-      [x, y] = [x - 1, y];
-    }
-    // console.log({x, y})
-    console.log(this.playerCoords, "<-------------------")
-    console.log([x, y])
+  updateCoords(nsew, loc) {
+    loc = loc.slice(1)
+    const {tiles} = this
+    let y = tiles.reduce((acc, row, i) => row.indexOf(loc) > -1 ? i : acc, null)
+    let x = tiles[y].indexOf(loc);
+//     this.count++
+//     console.log('-------------------------------------------------')
+//     let [y, x] = this.location[this.playerCoords];
+//     if (this.count % 2 === 0) {
+//       console.log(this.count)
+//       console.log(nsew,)
+//       console.log([x, y])
+//       if (nsew === "north") {
+//         [x, y] = [x, y - 1];
+//       }
+//       if (nsew === "south") {
+//         [x, y] = [x, y + 1];
+//       }
+//       if (nsew === "east") {
+//         [x, y] = [x + 1, y];
+//       }
+//       if (nsew === "west") {
+//         [x, y] = [x - 1, y];
+//       }
+//     }
+//     x = x > 2 ? 2 : x < 0 ? 0 : x;
+//     y = y > 2 ? 2 : y < 0 ? 0 : x;
+// console.log()
+//     // console.log({x, y})
+//     console.log(this.playerCoords, "<-------------------")
+//     console.log([x, y])
     this.playerCoords = this.location.reduce(
       (acc, cur, i) => (cur[1] === x && cur[0] === y ? i : acc),
       null
     );
-    console.log(this.playerCoords, "<-------------------")
+//     console.log(this.playerCoords, "<-------------------")
   }
 }
 

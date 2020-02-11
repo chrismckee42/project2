@@ -18,6 +18,7 @@ $(document).ready(function() {
       type: "get",
       data: {name, response}
     }).then(function(res) {
+      event.preventDefault()
       console.log("test",res); //html...
       // Reload the page to get the updated prompt
       location.reload();
