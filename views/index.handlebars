@@ -1,33 +1,40 @@
-<div id="home">
-  <div class="container">
-    <div class="row">
-      <div class="col-8 offset-2">
-        <h1>{{msg}}</h1>
-        <h2>This is our Home Page!</h2>
-        <form class="clearfix mb-4" action="POST">
-          <div class="form-group">
-            <label for="example-text">Example Text</label>
-            <input type="text" id="example-text" class="form-control" aria-describedby="example-text" placeholder="Enter Example Text">
-          </div>
-          <div class="form-group">
-            <label for="example-description">Example Description</label>
-            <textarea class="form-control" id="example-description" aria-describedby="example-description" placeholder="Enter Example Description"></textarea>
-          </div>
-          <button id="submit" class="btn btn-primary float-right">Submit</button>
-        </form>
-        <h3>Examples:</h3>
-        <ul id="example-list" class="list-group">
-          {{#each examples}}
-          <li data-id="{{this.id}}" class="list-group-item">
-            <a href="example/{{this.id}}">{{this.text}}</a>
-            <button class="btn btn-danger float-right delete">ｘ</button>
-          </li>
-          {{/each}}
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+	<style>
+		header {
+			background-image: url("{{{background}}}");
+			-webkit-background-size: 100%;
+			-moz-background-size: 100%;
+			-o-background-size: 100%;
+			background-size: 100% relative;
+			max-height: 650px;
+		}
+	</style>
+	
+	<div class="container">
+		<header id="masthead">
+            {{#if monster}}
+			<img id="monster" src="{{monster}}" class="rounded mx-auto d-block" alt="{{monster}}">
+            {{/if}}
+			{{#unless monster}}
+			<div height="400" width="400">.</br></br></br></br></br></br></br></br></br></br></br></br></br>.</div>
+			{{/unless}}
+		</header>
+		<div id="main-container" class="container">
+			<section class="main-section">
+				<p class="message" name="{{name}}">{{message}}</p>
+				<div>
+					{{#if choices}}
+					{{#each choices}}
+					<button type="button" class="choices btn btn-success btn-lg btn-block">{{this}}</button>
+					{{/each}}
+					{{/if}}
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="/js/index.js"></script>
+					{{#unless choices}}
+					<div class="form-group form-check">
+						<input class="inputText form-control form-control-lg" type="text" placeholder="">
+						<button class="inputBtn btn btn-primary">Submit</button>
+					</div>
+					{{/unless}}
+				</div>
+			</section>
+		</div>
+	</div>
